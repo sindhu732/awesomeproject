@@ -97,7 +97,7 @@ export default class SummaryScreenTable extends Component {
 
   createItemCol(title, rows) {
     const cells = ([...Array(rows||0)])
-        .map((v, i) => (<SummaryScreenTableCell key={i} />));
+        .map((v, i) => (<SummaryScreenTableCell key={i} certaintyText={rows[i]} />));
     return (
         <View style={styles.itemCol}>
           <View style={styles.chimpColTitle}>
@@ -125,17 +125,19 @@ export default class SummaryScreenTable extends Component {
 
   // TODO: more complex lists for continued food / species
   createTimedList(items, intervals) {
-
     let itemList = [];
+    for (var k in items) {
+      itemList.push(items[k].foodName + " " + items[k].foodPart);
+    }
 
-    return items.slice(0, intervals);
+    let buffer = intervals - itemList.length;
+    for (i = 0; i < buffer; i++) {
+      itemList.push("");
+    }
+    return itemList;
   }
 
   render() {
-
-    console.log("Community: ", this.props.community);
-    console.log(this.props.food);
-    console.log(this.props.species);
 
     const startTimeIndex = this.props.times.indexOf(this.props.followStartTime);
     const endTimeIndex = this.props.times.indexOf(this.props.followEndTime);
@@ -233,11 +235,12 @@ const styles = {
     textAlign: 'center',
   },
   timeRow: {
-    marginBottom: 13,
+    marginBottom: 10,
   },
   timeRowText: {
-    fontSize: 12,
-    textAlign: 'center'
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#33b5e5'
   },
   cell: {
     height: 30,

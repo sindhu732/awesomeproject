@@ -126,6 +126,9 @@ export default class Util {
   }
 
   static getTimeOutput(dbTime) {
+    if (dbTime == "ongoing") {
+      return dbTime;
+    }
     const timeIndex = this.getDbTimeIndex(dbTime);
     const englishTime = englishTimeList[timeIndex];
     return englishTime.substring(0, englishTime.indexOf(':') + 1)+ dbTime.substring(dbTime.indexOf(':') + 1, dbTime.indexOf(':') + 3);

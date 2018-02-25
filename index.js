@@ -4,6 +4,9 @@ import {
   AppRegistry,
   StyleSheet,
 } from 'react-native';
+import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
+import store from './reduxmgmt/store.js';
 
 import deviceLog, {LogView, InMemoryAdapter} from 'react-native-device-log';
 
@@ -168,7 +171,9 @@ export default class JGIDigiTiki extends Component {
 
   render() {
     return (
-      <Navstack screenProps={this.state}/>
+      <Provider store={store}>
+        <Navstack screenProps={this.state}/>
+      </Provider>
     );
   }
 }

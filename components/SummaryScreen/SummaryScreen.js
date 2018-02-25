@@ -52,7 +52,6 @@ export default class SummaryScreen extends Component {
         foodName: fo.foodName,
         foodPart: fo.foodPart
       }));
-    console.log(foodObjects);
     console.log(food);
 
     // TODO: filter using follow.id
@@ -68,7 +67,6 @@ export default class SummaryScreen extends Component {
         speciesName: fo.speciesName,
         speciesCount: fo.speciesCount
     }));
-    console.log(speciesObjects);
     console.log(species);
 
     let followStartTimes = [this.props.navigation.state.params.follow.startTime];

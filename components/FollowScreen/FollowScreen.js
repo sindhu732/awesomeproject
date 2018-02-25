@@ -476,7 +476,6 @@ export default class FollowScreen extends Component {
             style={[sharedStyles.btn, sharedStyles.btnSpecial]}
             onPress={this.presentEndFollowAlert.bind(this)} title={strings.Follow_EndFollowButtonTitle} >
           </Button>
-          <Text>GPS: { this.state.GPSStatus }</Text>
         </View>
 
         <FollowScreenHeader

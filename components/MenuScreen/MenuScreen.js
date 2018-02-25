@@ -8,12 +8,24 @@ import {
   Text,
   View
 } from 'react-native';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 import Orientation from 'react-native-orientation';
 import deviceLog, {LogView, InMemoryAdapter} from 'react-native-device-log';
 
 import sharedStyles from '../SharedStyles';
 
-export default class MenuScreen extends Component {
+const mapStateToProps = state => ({
+  count: state.count
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  increment: () => { dispatch({ type: 'INCREMENT' }) },
+  decrement: () => { dispatch({ type: 'DECREMENT' }) },
+  reset: () => { dispatch({ type: 'RESET' }) },
+})
+
+class MenuScreen extends Component {
 
   _orientationDidChange(orientation) {
     console.log("_orientationDidChange", orientation);
@@ -68,12 +80,28 @@ export default class MenuScreen extends Component {
             <Text style={styles.menuBtnText}> GPS Monitor </Text>
         </TouchableOpacity>
 
+        <View>
+          <Button
+            title="Up"
+            onPress={this.props.increment}/>
+          <Text
+            style={styles.counter}
+            onPress={this.props.reset}>
+            {this.props.count}
+          </Text>
+          <Button
+            title="Down"
+            onPress={this.props.decrement}/>
+        </View>
+
         <Text>Version: 0.3.4</Text>
 
       </ImageBackground>
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen);
 
 const styles = {
   container: {
