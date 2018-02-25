@@ -124,10 +124,19 @@ export default class SummaryScreenTable extends Component {
   }
 
   // TODO: more complex lists for continued food / species
-  createTimedList(items, intervals) {
+  createTimedList(category, items, intervals) {
     let itemList = [];
-    for (var k in items) {
-      itemList.push(items[k].foodName + " " + items[k].foodPart);
+
+    if (category == "Food") {
+      for (var k in items) {
+        itemList.push(items[k].foodName + " " + items[k].foodPart);
+      }
+    }
+
+    if (category == "Species") {
+      for (var k in items) {
+        itemList.push(items[k].speciesName + " " + items[k].speciesCount);
+      }
     }
 
     let buffer = intervals - itemList.length;
@@ -157,8 +166,8 @@ export default class SummaryScreenTable extends Component {
     const femaleChimpCols = this.props.chimps.filter((c) => c.sex == 'F' && c.community == this.props.community)
         .map((c, i) => this.createChimpCol(c.name, i, intervals, c.name === this.props.focalChimpId));
 
-    const foodList = this.createTimedList(this.props.food, intervals);
-    const speciesList = this.createTimedList(this.props.species, intervals);
+    const foodList = this.createTimedList("Food", this.props.food, intervals);
+    const speciesList = this.createTimedList("Species", this.props.species, intervals);
     const foodCol = this.createItemCol("Food", foodList);
     const speciesCol = this.createItemCol("Species", speciesList);
 
