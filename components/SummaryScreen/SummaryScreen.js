@@ -20,7 +20,7 @@ import strings from '../../data/strings';
 import SummaryScreenHeader from './SummaryScreenHeader';
 import SummaryScreenTable from './SummaryScreenTable';
 import assert from 'assert';
-
+import Util from '../util';
 
 export default class SummaryScreen extends Component {
 
@@ -39,7 +39,9 @@ export default class SummaryScreen extends Component {
         .filtered('focalId = $0 AND date = $1', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date);
 
     // TODO: filter using follow.id
-    const foodObjects = realm.objects('Food').filtered('focalId = $0 AND date = $1', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date);
+    //const foodObjects = realm.objects('Food').filtered('focalId = $0 AND date = $1', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date);
+
+    const foodObjects = realm.objects('Food').filtered('followId = $0', this.props.navigation.state.params.follow.id);
 
     const food = foodObjects
       .map((fo, i) => ({
@@ -50,9 +52,12 @@ export default class SummaryScreen extends Component {
         foodName: fo.foodName,
         foodPart: fo.foodPart
       }));
+    console.log(foodObjects);
+    console.log(food);
 
     // TODO: filter using follow.id
-    const speciesObjects = realm.objects('Species').filtered('focalId = $0 AND date = $1', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date);
+    //const speciesObjects = realm.objects('Species').filtered('focalId = $0 AND date = $1', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date);
+    const speciesObjects = realm.objects('Species').filtered('followId = $0', this.props.navigation.state.params.follow.id);
 
     const species = speciesObjects
       .map((fo, i) => ({
@@ -63,6 +68,8 @@ export default class SummaryScreen extends Component {
         speciesName: fo.speciesName,
         speciesCount: fo.speciesCount
     }));
+    console.log(speciesObjects);
+    console.log(species);
 
     let followStartTimes = [this.props.navigation.state.params.follow.startTime];
     followStartTimes = followStartTimes.concat(followArrivals.map((fa, i) => fa.followStartTime));

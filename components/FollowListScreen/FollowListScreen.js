@@ -21,8 +21,8 @@ export default class FollowListScreen extends Component {
 
   render() {
 
-    const follows = realm.objects('Follow')
-      .filtered('endTime = $0', undefined);
+    const follows = realm.objects('Follow');
+      //.filtered('endTime = $0', undefined);
 
     const rows = follows.map((f, i) => {
       return (

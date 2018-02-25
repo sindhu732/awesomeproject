@@ -29,7 +29,7 @@ export default class NewFollowScreen extends Component {
   };
 
   componentDidMount() {
-    //Orientation.lockToPortrait(); // TODO: lockToPortrait
+    Orientation.lockToPortrait(); 
   }
 
   getCommunities = () => {

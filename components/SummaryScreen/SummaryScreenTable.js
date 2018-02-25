@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   BackAndroid,
-  Button,
   Dimensions,
   Image,
   ScrollView,
@@ -118,9 +117,8 @@ export default class SummaryScreenTable extends Component {
               if (shouldAllowAction === true) {
                 onTimeSelected(dbTime);
               }
-            }}
-        >
-          <Text style={styles.timeRowText}>{Util.dbTime2UserTime(dbTime)}</Text>
+            }}>
+          <Text style={styles.timeRowText}>{Util.dbTime2UserTime(dbTime)} </Text>
         </TouchableHighlight>
     );
   }
