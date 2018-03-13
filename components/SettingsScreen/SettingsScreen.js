@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { RadioButtons } from 'react-native-radio-buttons';
 import assert from 'assert';
+import * as actions from '../../reduxmgmt/actions';
+import { connect } from 'react-redux';
 
 import SharedStyles from '../SharedStyles';
 
@@ -43,7 +45,7 @@ class LocalizedTextSettingRow extends Component {
   }
 }
 
-export default class SettingsScreen extends Component {
+class SettingsScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -66,7 +68,7 @@ export default class SettingsScreen extends Component {
     const languageOptions = ["en", "sw"];
 
     function setSelectedOption(selectedOption){
-      //this.props.onLanguageChanged(selectedOption);
+      this.props.changeLanguage(selectedOption);
       this.props.screenProps.language = selectedOption;
     }
 
@@ -118,6 +120,14 @@ export default class SettingsScreen extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    selectedLanguage: state.selectedLanguage
+  }
+}
+
+export default connect(mapStateToProps, actions)(SettingsScreen);
 
 const styles = {
   container: {

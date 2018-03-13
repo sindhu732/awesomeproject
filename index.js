@@ -4,9 +4,6 @@ import {
   AppRegistry,
   StyleSheet,
 } from 'react-native';
-import { Provider } from 'react-redux';
-import { connect } from 'react-redux';
-import store from './reduxmgmt/store.js';
 
 import deviceLog, {LogView, InMemoryAdapter} from 'react-native-device-log';
 
@@ -33,6 +30,14 @@ import defaultFoodParts from './data/food-part-list.json';
 import defaultSpecies from './data/species-list.json';
 import speciesNumbers from './data/species-number-list.json';
 import defaultStrings from './data/strings';
+
+// Redux
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reduxmgmt/reducer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+
+const store = createStore(reducers, applyMiddleware(thunk));
 
 const defaultLanguage = 'en';
 

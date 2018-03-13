@@ -8,22 +8,12 @@ import {
   Text,
   View
 } from 'react-native';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
 import Orientation from 'react-native-orientation';
 import deviceLog, {LogView, InMemoryAdapter} from 'react-native-device-log';
+import * as actions from '../../reduxmgmt/actions';
+import { connect } from 'react-redux';
 
 import sharedStyles from '../SharedStyles';
-
-const mapStateToProps = state => ({
-  count: state.count
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  increment: () => { dispatch({ type: 'INCREMENT' }) },
-  decrement: () => { dispatch({ type: 'DECREMENT' }) },
-  reset: () => { dispatch({ type: 'RESET' }) },
-})
 
 class MenuScreen extends Component {
 
@@ -39,11 +29,17 @@ class MenuScreen extends Component {
   componentDidMount() {
     Orientation.lockToPortrait();
     Orientation.addOrientationListener(this._orientationDidChange);
+    this.increment();
+  }
+
+  increment() {
+    this.props.reduxState();
   }
 
   render() {
 
-    const strings = this.props.screenProps.localizedStrings; // default = "en"
+    const strings = this.props.screenProps.localizedStrings;
+    //const strings = "en";
 
     return(
       <ImageBackground source={require('../../img/chimp.png')} style={styles.container}>
@@ -81,27 +77,26 @@ class MenuScreen extends Component {
         </TouchableOpacity>
 
         <View>
-          <Button
-            title="Up"
-            onPress={this.props.increment}/>
-          <Text
-            style={styles.counter}
-            onPress={this.props.reset}>
-            {this.props.count}
+          <Button title="Up" onPress={ () => this.increment() }/>
+          <Text>
+              {this.props.count}
           </Text>
-          <Button
-            title="Down"
-            onPress={this.props.decrement}/>
         </View>
 
-        <Text>Version: 0.3.4</Text>
+        <Text>Version: 0.3.6</Text>
 
       </ImageBackground>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MenuScreen);
+const mapStateToProps = (state) => {
+    return {
+      count: state.count
+    }
+}
+
+export default connect(mapStateToProps, actions)(MenuScreen);
 
 const styles = {
   container: {

@@ -29,7 +29,7 @@ export default class NewFollowScreen extends Component {
   };
 
   componentDidMount() {
-    Orientation.lockToPortrait(); 
+    Orientation.lockToPortrait();
   }
 
   getCommunities = () => {
@@ -231,7 +231,8 @@ export default class NewFollowScreen extends Component {
                      species: species,
                      day: day,
                      month: month,
-                     year: year
+                     year: year,
+                     intervalId: 0
                   });
                 });
 
@@ -241,6 +242,7 @@ export default class NewFollowScreen extends Component {
                   follow: follow,
                   followTime: follow.startTime,
                   locationInterval: this.state.locationInterval,
+                  trackGps: true
                 });
               }
             }}

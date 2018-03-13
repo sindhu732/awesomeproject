@@ -130,6 +130,7 @@ export default class Util {
       return dbTime;
     }
     const timeIndex = this.getDbTimeIndex(dbTime);
+    // TODO: -1 since english-time was ahead by 1hr
     const englishTime = englishTimeList[timeIndex];
     return englishTime.substring(0, englishTime.indexOf(':') + 1)+ dbTime.substring(dbTime.indexOf(':') + 1, dbTime.indexOf(':') + 3);
   }

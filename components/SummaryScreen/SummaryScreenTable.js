@@ -244,10 +244,10 @@ const styles = {
     textAlign: 'center',
   },
   timeRow: {
-    marginBottom: 10,
+    marginBottom: 13,
   },
   timeRowText: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'center',
     color: '#33b5e5'
   },

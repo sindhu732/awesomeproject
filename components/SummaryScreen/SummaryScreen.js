@@ -113,7 +113,8 @@ export default class SummaryScreen extends Component {
               this.props.navigation.navigate('FollowScreen', {
                 follow: this.props.navigation.state.params.follow,
                 followTime: t,
-                followArrivals: updatedFollowArrivals
+                followArrivals: updatedFollowArrivals,
+                trackGps: false
               });
             }}
             followArrivalSummary={followArrivalSummary}

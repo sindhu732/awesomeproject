@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Button,
+  CheckBox,
   Text,
   View
 } from 'react-native';
@@ -14,6 +15,9 @@ import Util from '../util';
 import sharedStyles from '../SharedStyles';
 import BackgroundTimer from 'react-native-background-timer';
 
+import * as actions from '../../reduxmgmt/actions';
+import { connect } from 'react-redux';
+
 import FollowArrivalTable from './FollowArrivalTable';
 import FollowScreenHeader from './FollowScreenHeader';
 import ItemTrackerModal from './ItemTrackerModal';
@@ -24,18 +28,34 @@ const ModalType = Object.freeze({
   species: 2
 });
 
-export default class FollowScreen extends Component {
+class FollowScreen extends Component {
 
   intervalId: ?number = null;
   watchId: ?number = null;
 
   componentDidMount() {
     Orientation.lockToPortrait();
+    if(this.state.gpsTrackerOn) {
+      console.log("GPS tracker already ON");
+    } else {
+      this.props.trackGps();
+    }
     try {
       console.log("Timer running ", intervalId);
     } catch (e) {
       console.log("No timers running");
       this.restartTimer();
+      // if(!this.props.navigation.state.params.tracksGps) {
+      //   Alert.alert(
+      //       'GPS Tracker',
+      //       'Do you want to record GPS positions for this follow?',
+      //       [
+      //         {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      //         {text: 'Yes', onPress: () => this.props.trackGps()}
+      //       ],
+      //       { cancelable: false }
+      //     );
+      // }
     }
   }
 
@@ -198,6 +218,8 @@ export default class FollowScreen extends Component {
 
   restartTimer() {
     console.log("Timer started for: ", this.state.timerInterval);
+    this.props.turnOnGPS();
+    this.props.setGPSStauts('Searching');
     this.getGPSnow(this.state.currentFollowTime);
 
     intervalId = BackgroundTimer.setInterval(() => {
@@ -220,6 +242,7 @@ export default class FollowScreen extends Component {
     watchId = navigator.geolocation.getCurrentPosition((position) => {
         console.log("Wrote to Realm ", followStartTime, focalId);
         this.setState({ GPSStatus: 'OK' });
+        this.props.setGPSStauts('OK');
 
         realm.write(() => {
           const newLocation = realm.create('Location', {
@@ -237,6 +260,7 @@ export default class FollowScreen extends Component {
         });
       }, (error) => {
           console.log("Couldn't get lock");
+          this.props.setGPSStauts('Not found');
           this.getGPSnow(followStartTime);
       },
       {
@@ -465,7 +489,7 @@ export default class FollowScreen extends Component {
 
         <View style={styles.mainMenu}>
           <Button
-            style={[sharedStyles.btn, sharedStyles.btnSpecial, {marginRight: 8}]}
+            style={[sharedStyles.btn, sharedStyles.btnSpecial, {marginRight: 20}]}
             onPress={()=>{
               this.props.navigation.navigate('SummaryScreen', {
                 follow: this.props.navigation.state.params.follow
@@ -476,6 +500,12 @@ export default class FollowScreen extends Component {
             style={[sharedStyles.btn, sharedStyles.btnSpecial]}
             onPress={this.presentEndFollowAlert.bind(this)} title={strings.Follow_EndFollowButtonTitle} >
           </Button>
+          <Text>GPS Status: { this.props.gpsStatus }</Text>
+          <CheckBox
+            value={this.props.gpsTrackerOn}
+            onValueChange={() => this.toggleGPS() }
+          />
+          <Text style={{marginTop: 5}}>Track GPS</Text>
         </View>
 
         <FollowScreenHeader
@@ -620,6 +650,16 @@ export default class FollowScreen extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    gpsTrackerOn: state.gpsTrackerOn,
+    gpsStatus: state.gpsStatus,
+    lastGpsPosition: state.lastGpsPosition,
+  }
+}
+
+export default connect(mapStateToProps, actions)(FollowScreen);
 
 const styles = {
   container: {
