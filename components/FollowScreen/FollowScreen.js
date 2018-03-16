@@ -35,31 +35,35 @@ class FollowScreen extends Component {
 
   componentDidMount() {
     Orientation.lockToPortrait();
-    if(this.state.gpsTrackerOn) {
+    if(this.props.navigation.state.params.trackGps) {
       console.log("GPS tracker already ON");
-    } else {
-      this.props.trackGps();
-    }
-    try {
-      console.log("Timer running ", intervalId);
-    } catch (e) {
-      console.log("No timers running");
       this.restartTimer();
-      // if(!this.props.navigation.state.params.tracksGps) {
-      //   Alert.alert(
-      //       'GPS Tracker',
-      //       'Do you want to record GPS positions for this follow?',
-      //       [
-      //         {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-      //         {text: 'Yes', onPress: () => this.props.trackGps()}
-      //       ],
-      //       { cancelable: false }
-      //     );
-      // }
+    } else if (this.props.gpsTrackerOn) {
+      console.log("GPS tracking ON and active");
+    } else {
+      Alert.alert(
+          'GPS Tracker',
+          'Do you want to record GPS positions for this follow?',
+          [
+            {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'Yes', onPress: () => {
+              this.props.trackGps(); // gpsTrackerOn: true
+              this.restartTimer(); // TODO: move to actions
+              }
+            }
+          ],
+          { cancelable: false }
+        );
     }
   }
 
   componentWillUnmount() {
+    BackgroundTimer.clearInterval(intervalId);
+    navigator.geolocation.clearWatch(watchId);
+  }
+
+  stopTimer() {
+    this.props.setGPSStatus("OFF");
     BackgroundTimer.clearInterval(intervalId);
     navigator.geolocation.clearWatch(watchId);
   }
@@ -210,16 +214,12 @@ class FollowScreen extends Component {
       lastPosition: 'unknown',
       maleChimpsSorted: maleChimpsSorted,
       femaleChimpsSorted: femaleChimpsSorted,
-      GPSStatus: 'Not found',
-      timerInterval: 15*60*1000, // 15 mins
       currentFollowTime: this.props.navigation.state.params.followTime
      };
   };
 
   restartTimer() {
-    console.log("Timer started for: ", this.state.timerInterval);
-    this.props.turnOnGPS();
-    this.props.setGPSStauts('Searching');
+    console.log("Timer started for: ", this.props.gpsTimerInterval);
     this.getGPSnow(this.state.currentFollowTime);
 
     intervalId = BackgroundTimer.setInterval(() => {
@@ -227,11 +227,12 @@ class FollowScreen extends Component {
         const nextFollowTime = followTimeIndex !== this.props.screenProps.times.length - 1 ? this.props.screenProps.times[followTimeIndex + 1] : null;
         this.setState({currentFollowTime: nextFollowTime});
         this.getGPSnow(nextFollowTime);
-      }, this.state.timerInterval);
+      }, this.props.gpsTimerInterval);
   }
 
   getGPSnow(followStartTime) {
     console.log("Get GPS now");
+    this.props.setGPSStatus('Searching');
 
     const followId = this.props.navigation.state.params.follow.id;
     const focalId = this.props.navigation.state.params.follow.focalId;
@@ -241,8 +242,7 @@ class FollowScreen extends Component {
 
     watchId = navigator.geolocation.getCurrentPosition((position) => {
         console.log("Wrote to Realm ", followStartTime, focalId);
-        this.setState({ GPSStatus: 'OK' });
-        this.props.setGPSStauts('OK');
+        this.props.setGPSStatus('OK');
 
         realm.write(() => {
           const newLocation = realm.create('Location', {
@@ -260,7 +260,7 @@ class FollowScreen extends Component {
         });
       }, (error) => {
           console.log("Couldn't get lock");
-          this.props.setGPSStauts('Not found');
+          this.props.setGPSStatus('Not found');
           this.getGPSnow(followStartTime);
       },
       {
@@ -342,17 +342,24 @@ class FollowScreen extends Component {
         }
 
         // TODO: change state -- don't create duplicate components
+        console.log("Interval number, ", this.props.navigation.state.params.intervalNumber + 1);
         this.props.navigation.navigate('FollowScreen', {
           follow: this.props.navigation.state.params.follow,
           followTime: followTime,
-          followArrivals: updatedFollowArrivals
+          followArrivals: updatedFollowArrivals,
+          trackGps: true,
+          intervalNumber: this.props.navigation.state.params.intervalNumber + 1
         });
 
       }
     } else {
+      console.log("Interval number restarted, ", 0);
+
       this.props.navigation.navigate('FollowScreen', {
         follow: this.props.navigation.state.params.follow,
-        followTime: followTime
+        followTime: followTime,
+        trackGps: true,
+        intervalNumber: 0
       });
     }
   }
@@ -442,7 +449,9 @@ class FollowScreen extends Component {
                     date: this.props.navigation.state.params.follow.date,
                     focalId: this.props.navigation.state.params.follow.focalId,
                     startTime: data.startTime,
-                    endTime: data.endTime
+                    endTime: data.endTime,
+                    startInterval: this.props.navigation.state.params.intervalNumber,
+                    endInterval: this.props.navigation.state.params.intervalNumber,
                   };
                   objectDict[mainFieldName] = data.mainSelection;
                   objectDict[secondaryFieldName] = data.secondarySelection;
@@ -489,7 +498,7 @@ class FollowScreen extends Component {
 
         <View style={styles.mainMenu}>
           <Button
-            style={[sharedStyles.btn, sharedStyles.btnSpecial, {marginRight: 20}]}
+            style={[sharedStyles.btn, sharedStyles.btnSpecial, styles.btnInGroup]}
             onPress={()=>{
               this.props.navigation.navigate('SummaryScreen', {
                 follow: this.props.navigation.state.params.follow
@@ -497,15 +506,24 @@ class FollowScreen extends Component {
             }} title={strings.Follow_SeeSummaryButtonTitle}>
           </Button>
           <Button
-            style={[sharedStyles.btn, sharedStyles.btnSpecial]}
+            style={[sharedStyles.btn, sharedStyles.btnSpecial, styles.btnInGroup]}
             onPress={this.presentEndFollowAlert.bind(this)} title={strings.Follow_EndFollowButtonTitle} >
           </Button>
-          <Text>GPS Status: { this.props.gpsStatus }</Text>
+          <Text style={styles.btnStatus}>GPS Status: { this.props.gpsStatus }</Text>
           <CheckBox
             value={this.props.gpsTrackerOn}
-            onValueChange={() => this.toggleGPS() }
-          />
-          <Text style={{marginTop: 5}}>Track GPS</Text>
+            onValueChange={() => {
+                if(this.props.gpsTrackerOn) {
+                  console.log("Stop GPS");
+                  this.stopTimer();
+                } else {
+                  console.log("Turn on GPS");
+                  this.restartTimer();
+                }
+                this.props.toggleGPS();
+              }
+            }/>
+          <Text style={styles.btnStatus}>Track GPS</Text>
         </View>
 
         <FollowScreenHeader
@@ -628,20 +646,9 @@ class FollowScreen extends Component {
                   newFollowArrivals[chimpId] = arrival;
                   this.setState({followArrivals: newFollowArrivals});
 
-                  // realm.create('FollowArrival', {
-                  //   date: this.props.navigation.state.params.follow.date,
-                  //   followStartTime: this.props.navigation.state.params.followTime,
-                  //   focalId: this.props.navigation.state.params.follow.focalId,
-                  //   chimpId: chimpId,
-                  //   time: time,
-                  //   certainty: parseInt(Util.certaintyLabels.certain),
-                  //   estrus: parseInt(Util.estrusLabels.a),
-                  //   isWithin5m: false,
-                  //   isNearestNeighbor: false,
-                  //   grooming: 'N'
-                  // }, true);
-
                 });
+
+                // TODO: update subsequent values
               }
             }}
         />
@@ -656,6 +663,7 @@ const mapStateToProps = (state) => {
     gpsTrackerOn: state.gpsTrackerOn,
     gpsStatus: state.gpsStatus,
     lastGpsPosition: state.lastGpsPosition,
+    gpsTimerInterval: state.gpsTimerInterval,
   }
 }
 
@@ -695,6 +703,10 @@ const styles = {
   },
   btnInGroup: {
     marginRight: 8
+  },
+  btnStatus: {
+    marginRight: 8,
+    marginTop: 5
   }
 };
 

@@ -84,6 +84,8 @@ Species.schema = {
     focalId: 'string',
     speciesName: 'string',
     speciesCount: 'int',
+    startInterval: 'int',
+    endInterval: 'int'
   }
 };
 
@@ -101,6 +103,8 @@ Food.schema = {
     focalId: 'string',
     foodName: 'string',
     foodPart: 'string',
+    startInterval: 'int',
+    endInterval: 'int'
   }
 };
 
@@ -123,5 +127,5 @@ Location.schema = {
 }
 
 export default new Realm({
-  schema: [Follow, FollowArrival, Species, Food, Location, Chimp, ValuePairObjectSchema], schemaVersion: 3
+  schema: [Follow, FollowArrival, Species, Food, Location, Chimp, ValuePairObjectSchema], schemaVersion: 4
 });

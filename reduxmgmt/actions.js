@@ -42,7 +42,7 @@ export const toggleGPS = () => {
   }
 };
 
-export const setGPSStauts = (status) => {
+export const setGPSStatus = (status) => {
   return {
     type: 'SET_GPS_STATUS',
     payload: status
@@ -53,6 +53,27 @@ export const changeLanguage = (language) => {
   return {
     type: 'CHANGE_LANGUAGE',
     payload: language
+  }
+};
+
+export const loadLocalizedStrings = (strings) => {
+  return {
+    type: 'LOAD_LOCALIZED_STRINGS',
+    payload: strings
+  }
+};
+
+export const loadEnglishStrings = (strings) => {
+  return {
+    type: 'LOAD_ENGLISH_STRINGS',
+    payload: strings
+  }
+};
+
+export const loadSwahiliStrings = (strings) => {
+  return {
+    type: 'LOAD_SWAHILI_STRINGS',
+    payload: strings
   }
 };
 

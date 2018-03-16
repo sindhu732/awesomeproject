@@ -14,6 +14,8 @@ export default class ItemTrackerModal extends Component {
   state = {
     startTime: this.props.startTime,
     endTime: this.props.endTime,
+    startInterval: this.props.startInterval,
+    endInterval: this.props.endInterval,
     mainSelection: this.props.mainSelection,
     secondarySelection: this.props.secondarySelection,
     isEditing: this.props.startTime !== null,
@@ -24,6 +26,8 @@ export default class ItemTrackerModal extends Component {
     this.setState({
       startTime: nextProps.initialStartTime,
       endTime: nextProps.initialEndTime,
+      startInterval: nextProps.startInterval,
+      endInterval: nextProps.endInterval,
       mainSelection: nextProps.initialMainSelection,
       secondarySelection: nextProps.initialSecondarySelection,
       isEditing: nextProps.initialStartTime !== null,
@@ -78,7 +82,9 @@ export default class ItemTrackerModal extends Component {
                       mainSelection: this.state.mainSelection,
                       secondarySelection: this.state.secondarySelection,
                       startTime: this.state.startTime,
-                      endTime: this.state.endTime !== null ? this.state.endTime : 'ongoing'
+                      endTime: this.state.endTime !== null ? this.state.endTime : 'ongoing',
+                      startInterval: this.state.startInterval,
+                      endInterval: this.state.endInterval !== null ? this.state.endInterval : 'ongoing',
                     };
                     this.props.onSave(data, this.state.isEditing);
                     this.props.onDismiss();

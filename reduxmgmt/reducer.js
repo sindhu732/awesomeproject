@@ -2,10 +2,13 @@
 const initialState = {
   count: 0,
   gpsTrackerOn: false,
-  gpsTimerInterval: 15*60*1000, // save in constants.js
-  gpsStatus: 'Not found',
+  gpsTimerInterval: 3*60*1000,
+  gpsStatus: '',
   lastGpsPosition: null, // position.timestamp, position.coords.latitude, longitude, altitude, accuracy
-  selectedLanguage: "en"
+  selectedLanguage: "en",
+  localizedStrings: null,
+  enStrings: null,
+  swStrings: null
 };
 
 // REDUCERS
@@ -29,8 +32,7 @@ export default (state = initialState, action) => {
     case 'TRACK_GPS':
       return {
         ...state,
-        gpsTrackerOn: true,
-        gpsStatus: 'Searching'
+        gpsTrackerOn: true
       }
     case 'TURN_ON_GPS':
       return {
@@ -57,6 +59,22 @@ export default (state = initialState, action) => {
         ...state,
         selectedLanguage: action.payload
       }
+    case 'LOAD_LOCALIZED_STRINGS':
+      return {
+        ...state,
+        localizedStrings: action.payload
+      }
+    case 'LOAD_ENGLISH_STRINGS':
+      return {
+        ...state,
+        enStrings: action.payload
+      }
+    case 'LOAD_SWAHILI_STRINGS':
+      return {
+        ...state,
+        swStrings: action.payload
+      }
+
     default:
       return state;
     }

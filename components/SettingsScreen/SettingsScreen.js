@@ -49,19 +49,19 @@ class SettingsScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedLanguage: this.props.screenProps.language
-    }
+    // this.state = {
+    //   selectedLanguage: this.props.screenProps.language
+    // }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      selectedLanguage: nextProps.language
-    });
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({
+  //     selectedLanguage: nextProps.language
+  //   });
+  // }
 
-  componentWillMount() {
-  }
+  // componentWillMount() {
+  // }
 
   render() {
 
@@ -107,8 +107,8 @@ class SettingsScreen extends Component {
          <Text>Language: </Text>
          <RadioButtons
              options={ languageOptions }
-             onSelection={setSelectedOption.bind(this) }
-             selectedOption={ this.state.selectedLanguage }
+             onSelection={ setSelectedOption.bind(this) }
+             selectedOption={ this.props.selectedLanguage }
              renderOption={ renderOption }
              renderContainer={ renderContainer }
          />

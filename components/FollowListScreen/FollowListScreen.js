@@ -13,10 +13,14 @@ import realm from '../../models/realm';
 import strings from '../../data/strings';
 import Util from '../util';
 
-export default class FollowListScreen extends Component {
+import * as actions from '../../reduxmgmt/actions';
+import { connect } from 'react-redux';
+
+class FollowListScreen extends Component {
 
   componentDidMount() {
     Orientation.lockToPortrait();
+    //this.props.turnOffGPS();
   }
 
   render() {
@@ -79,6 +83,14 @@ class FollowListRow extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    selectedLanguage: state.selectedLanguage
+  }
+}
+
+export default connect(mapStateToProps, actions)(FollowListScreen);
 
 var styles = {
   container: {
