@@ -50,7 +50,10 @@ export default class SummaryScreen extends Component {
         startTime: Util.getTimeOutput(fo.startTime),
         endTime: Util.getTimeOutput(fo.endTime),
         foodName: fo.foodName,
-        foodPart: fo.foodPart
+        foodPart: fo.foodPart,
+        startInterval: fo.startInterval,
+        endInterval: fo.endInterval,
+        intervalNumber: fo.intervalNumber
       }));
     console.log(food);
 

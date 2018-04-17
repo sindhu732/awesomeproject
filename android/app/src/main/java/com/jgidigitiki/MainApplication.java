@@ -10,6 +10,13 @@ import com.chirag.RNMail.RNMail;
 import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.rnfs.RNFSPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
+import io.realm.react.RealmReactPackage;
+import com.rnziparchive.RNZipArchivePackage;
+import com.github.yamill.orientation.OrientationPackage;
+import com.chirag.RNMail.RNMail;
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
+import com.rnfs.RNFSPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -30,6 +37,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RealmReactPackage(),
+            new RNZipArchivePackage(),
+            new OrientationPackage(),
+            new RNMail(),
+            new ReactNativeLocalizationPackage(),
+            new RNFSPackage(),
+            new BackgroundTimerPackage(),
             new RealmReactPackage(),
             new RNZipArchivePackage(),
             new OrientationPackage(),

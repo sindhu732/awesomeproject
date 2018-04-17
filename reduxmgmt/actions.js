@@ -1,4 +1,5 @@
 import store from '../App';
+import LocalizedStrings from 'react-native-localization';
 
 export const increment = () => {
   return {
@@ -42,6 +43,18 @@ export const toggleGPS = () => {
   }
 };
 
+export const incrementGpsTrialNumber = () => {
+  return {
+    type: 'INCREMENT_GPS_TRIAL_NUMBER'
+  }
+};
+
+export const resetGpsTrialNumber = () => {
+  return {
+    type: 'RESET_GPS_TRIAL_NUMBER'
+  }
+};
+
 export const setGPSStatus = (status) => {
   return {
     type: 'SET_GPS_STATUS',
@@ -57,9 +70,12 @@ export const changeLanguage = (language) => {
 };
 
 export const loadLocalizedStrings = (strings) => {
+
+  let localizedStrings = new LocalizedStrings({'en': strings, 'sw': strings});
+
   return {
     type: 'LOAD_LOCALIZED_STRINGS',
-    payload: strings
+    payload: localizedStrings
   }
 };
 
@@ -88,3 +104,16 @@ export const reduxState = () => {
     dispatch(increment());
   };
 }
+
+// export const restartTimer = () => {
+//   return (dispatch, getState) => {
+//     dispatch(getGPSnow(this.state.currentFollowTime));
+//
+//     intervalId = BackgroundTimer.setInterval(() => {
+//         const followTimeIndex = this.props.screenProps.times.indexOf(this.state.currentFollowTime);
+//         const nextFollowTime = followTimeIndex !== this.props.screenProps.times.length - 1 ? this.props.screenProps.times[followTimeIndex + 1] : null;
+//         this.setState({currentFollowTime: nextFollowTime});
+//         this.getGPSnow(nextFollowTime);
+//       }, this.props.gpsTimerInterval);
+//   }
+// }

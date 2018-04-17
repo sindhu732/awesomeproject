@@ -135,6 +135,29 @@ export default class Util {
     return englishTime.substring(0, englishTime.indexOf(':') + 1)+ dbTime.substring(dbTime.indexOf(':') + 1, dbTime.indexOf(':') + 3);
   }
 
+  static getTimeOutputUsingSuffix(dbTime) {
+    if (dbTime == "ongoing") {
+      return dbTime;
+    }
+    const columnIndex = dbTime.indexOf(':');
+    const minuteString = dbTime.substring(columnIndex, columnIndex+3);
+    const hourInt = parseInt(dbTime.substring(0, columnIndex+1));
+
+    let englishTime = hourInt + 6;
+
+    if (dbTime.slice(-1) == "A") {
+      if (hourInt == 12) {
+        englishTime = hourInt-12;
+      }
+      return englishTime.toString() + minuteString;
+    } else if (dbTime.slice(-1) == "J") {
+      if (hourInt < 5) {
+        englishTime = hourInt + 12;
+      }
+      return englishTime.toString() + minuteString;
+    }
+  }
+
   static dbTime2UserTime = (dbTime) => {
     // We expect something like 01-12:00J, so find the first - and take
     // everything after that.

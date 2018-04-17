@@ -5,6 +5,8 @@ const initialState = {
   gpsTimerInterval: 15*60*1000,
   gpsStatus: '',
   lastGpsPosition: null, // position.timestamp, position.coords.latitude, longitude, altitude, accuracy
+  gpsTimerId: null,
+  gpsTrialNumber: 0,
   selectedLanguage: "en",
   localizedStrings: null,
   enStrings: null,
@@ -53,6 +55,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gpsStatus: action.payload
+      }
+    case 'INCREMENT_GPS_TRIAL_NUMBER':
+      return {
+        ...state,
+        gpsTrialNumber: state.gpsTrialNumber + 1
+      }
+    case 'RESET_GPS_TRIAL_NUMBER':
+      return {
+        ...state,
+        gpsTrialNumber: 0
       }
     case 'CHANGE_LANGUAGE':
       return {

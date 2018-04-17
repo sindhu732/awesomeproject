@@ -60,12 +60,14 @@ class FollowScreen extends Component {
   componentWillUnmount() {
     BackgroundTimer.clearInterval(intervalId);
     navigator.geolocation.clearWatch(watchId);
+    BackgroundTimer.clearInterval(this.props.gpsIntervalId);
   }
 
   stopTimer() {
     this.props.setGPSStatus("OFF");
     BackgroundTimer.clearInterval(intervalId);
     navigator.geolocation.clearWatch(watchId);
+    BackgroundTimer.clearInterval(this.props.gpsIntervalId);
   }
 
   _unpackChimps(chimps) {
@@ -228,6 +230,8 @@ class FollowScreen extends Component {
         this.setState({currentFollowTime: nextFollowTime});
         this.getGPSnow(nextFollowTime);
       }, this.props.gpsTimerInterval);
+
+    this.props.gpsTimerId = intervalId;
   }
 
   getGPSnow(followStartTime) {
@@ -238,11 +242,14 @@ class FollowScreen extends Component {
     const focalId = this.props.navigation.state.params.follow.focalId;
     const date = this.props.navigation.state.params.follow.date;
     const community = this.props.navigation.state.params.follow.community;
-    //const followStartTime = this.props.navigation.state.params.followTime;
 
     watchId = navigator.geolocation.getCurrentPosition((position) => {
         console.log("Wrote to Realm ", followStartTime, focalId);
         this.props.setGPSStatus('OK');
+
+        if(this.props.gpsTrialNumber != 0) {
+          this.props.resetGpsTrialNumber();
+        }
 
         realm.write(() => {
           const newLocation = realm.create('Location', {
@@ -261,7 +268,31 @@ class FollowScreen extends Component {
       }, (error) => {
           console.log("Couldn't get lock");
           this.props.setGPSStatus('Not found');
-          this.getGPSnow(followStartTime);
+
+          // (0,0), (1, 3), (2, 6), (3, 9)
+          this.props.incrementGpsTrialNumber();
+
+          if(this.props.gpsTrialNumber == 2) {
+            realm.write(() => {
+              const newLocation = realm.create('Location', {
+                followId: followId,
+                date: date,
+                focalId: focalId,
+                followStartTime: followStartTime,
+                community: community,
+                timestamp: position.timestamp,
+                longitude: 0.0,
+                latitude: 0.0,
+                altitude: 0.0,
+                accuracy: 0.0
+              });
+            });
+          }
+
+          // Will not search again after minute 12
+          if(this.props.gpsTrialNumber < 4) {
+            this.getGPSnow(followStartTime);
+          }
       },
       {
         enableHighAccuracy: true, // FINE_LOCATION
@@ -347,7 +378,7 @@ class FollowScreen extends Component {
           follow: this.props.navigation.state.params.follow,
           followTime: followTime,
           followArrivals: updatedFollowArrivals,
-          trackGps: true,
+          trackGps: false,
           intervalNumber: this.props.navigation.state.params.intervalNumber + 1
         });
 
@@ -410,7 +441,6 @@ class FollowScreen extends Component {
   }
 
   render() {
-    //console.log("Rendering FollowScreen");
     const strings = this.props.screenProps.localizedStrings;
     const beginFollowTime = this.props.navigation.state.params.follow.startTime;
     const beginFollowTimeIndex = this.props.screenProps.times.indexOf(beginFollowTime);
@@ -442,6 +472,13 @@ class FollowScreen extends Component {
               let newFinishedList = this.state.modalType === ModalType.food ? this.state.finishedFood : this.state.finishedSpecies;
 
               realm.write(() => {
+
+                // When Food starts and ends in the same interval
+                // -- same startInterval and endInterval
+                // OR food was started in the current interval
+                // -- startInterval = this intervalNumber
+                // endInterval is temporarily this intervalNumber
+                // TODO: edit endInterval when it actually ends
                 if (!isEditing) {
                   let objectDict = {
                     followId: this.props.navigation.state.params.follow.id,
@@ -452,6 +489,7 @@ class FollowScreen extends Component {
                     endTime: data.endTime,
                     startInterval: this.props.navigation.state.params.intervalNumber,
                     endInterval: this.props.navigation.state.params.intervalNumber,
+                    intervalNumber: [this.props.navigation.state.params.intervalNumber, this.props.navigation.state.params.intervalNumber]
                   };
                   objectDict[mainFieldName] = data.mainSelection;
                   objectDict[secondaryFieldName] = data.secondarySelection;
@@ -474,10 +512,15 @@ class FollowScreen extends Component {
                       this.setState({finishedSpecies: newFinishedList});
                     }
                   }
-                } else {
+                }
+                // When food ends in a different interval
+                else {
                   let object = newActiveList.filter((o) => o.id === data.itemId)[0];
                   object.startTime = data.startTime;
                   object.endTime = data.endTime;
+                  object.startInterval = data.startInterval? data.startInterval: null;
+                  object.endInterval = this.props.navigation.state.params.intervalNumber;
+                  object.intervalNumber = [object.startInterval, this.props.navigation.state.params.intervalNumber];
                   object[mainFieldName] = data.mainSelection;
                   object[secondaryFieldName] = data.secondarySelection;
 
@@ -664,6 +707,8 @@ const mapStateToProps = (state) => {
     gpsStatus: state.gpsStatus,
     lastGpsPosition: state.lastGpsPosition,
     gpsTimerInterval: state.gpsTimerInterval,
+    gpsTimerId: state.gpsTimerId,
+    gpsTrialNumber: state.gpsTrialNumber
   }
 }
 

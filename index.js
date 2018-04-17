@@ -58,7 +58,7 @@ export default class JGIDigiTiki extends Component {
     super(props);
 
     this.state = {
-      language: defaultLanguage, 
+      language: defaultLanguage,
       localizedStrings: new LocalizedStrings(defaultStrings),
       enStrings: defaultStrings.en,
       swStrings: defaultStrings.sw,

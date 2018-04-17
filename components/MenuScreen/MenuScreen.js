@@ -87,7 +87,9 @@ class MenuScreen extends Component {
 const mapStateToProps = (state) => {
     return {
       count: state.count,
-      localizedStrings: state.localizedStrings
+      localizedStrings: state.localizedStrings,
+      enStrings: state.enStrings,
+      swStrings: state.swStrings
     }
 }
 
