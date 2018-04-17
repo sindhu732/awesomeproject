@@ -28,9 +28,7 @@ class MenuScreen extends Component {
 
   componentWillMount() {
     this.props.changeLanguage(this.props.screenProps.language); // Load default language
-    this.props.loadLocalizedStrings(this.props.screenProps.localizedStrings);
-    this.props.loadEnglishStrings(this.props.screenProps.enStrings);
-    this.props.loadSwahiliStrings(this.props.screenProps.swStrings);
+    this.props.loadLocalizedStrings(this.props.screenProps.enStrings, this.props.screenProps.swStrings);
   }
 
   componentDidMount() {
@@ -45,7 +43,7 @@ class MenuScreen extends Component {
 
   render() {
 
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
 
     return(
       <ImageBackground source={require('../../img/chimp.png')} style={styles.container}>
@@ -89,7 +87,8 @@ const mapStateToProps = (state) => {
       count: state.count,
       localizedStrings: state.localizedStrings,
       enStrings: state.enStrings,
-      swStrings: state.swStrings
+      swStrings: state.swStrings,
+      selectedLanguageStrings: state.selectedLanguageStrings
     }
 }
 

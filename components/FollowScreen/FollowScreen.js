@@ -396,7 +396,7 @@ class FollowScreen extends Component {
   }
 
   presentEndFollowAlert() {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     Alert.alert(
         strings.Follow_EndFollowAlertTitle,
         strings.Follow_EndFollowAlertMessage,
@@ -441,7 +441,7 @@ class FollowScreen extends Component {
   }
 
   render() {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     const beginFollowTime = this.props.navigation.state.params.follow.startTime;
     const beginFollowTimeIndex = this.props.screenProps.times.indexOf(beginFollowTime);
     const followTimeIndex = this.props.screenProps.times.indexOf(this.props.navigation.state.params.followTime);
@@ -708,7 +708,8 @@ const mapStateToProps = (state) => {
     lastGpsPosition: state.lastGpsPosition,
     gpsTimerInterval: state.gpsTimerInterval,
     gpsTimerId: state.gpsTimerId,
-    gpsTrialNumber: state.gpsTrialNumber
+    gpsTrialNumber: state.gpsTrialNumber,
+    selectedLanguageStrings: state.selectedLanguageStrings
   }
 }
 

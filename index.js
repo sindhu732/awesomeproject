@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Button,
   AsyncStorage,
   AppRegistry,
   StyleSheet,
@@ -198,7 +199,10 @@ const Navstack = StackNavigator({
   FollowListScreen: { screen: FollowListScreen },
   ExportDataScreen: { screen: ExportDataScreen },
   SummaryScreen: { screen: SummaryScreen },
-  SettingsScreen: { screen: SettingsScreen },
+    SettingsScreen: { screen: SettingsScreen, navigationOptions: {
+      headerLeft: null
+    } 
+  },
   GPSTestScreen: { screen: GPSTestScreen },
 }, {
   initialRouteName: 'MenuScreen',

@@ -20,10 +20,12 @@ const Mailer = NativeModules.RNMail;
 import { zip } from 'react-native-zip-archive';
 import Orientation from 'react-native-orientation';
 import Util from '../util';
+import * as actions from '../../reduxmgmt/actions';
+import { connect } from 'react-redux';
 
 import assert from 'assert';
 
-export default class ExportDataScreen extends Component {
+class ExportDataScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -56,7 +58,7 @@ export default class ExportDataScreen extends Component {
   };
 
   render() {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
 
     const follows = realm.objects('Follow')
         .filtered('date >= $0 AND date <= $1', this.state.startDate, this.state.endDate);
@@ -586,13 +588,21 @@ export default class ExportDataScreen extends Component {
       }
     }, (error, event) => {
       if(error) {
-        ToastAndroid.show(this.props.screenProps.localizedStrings.ExportData_SetUpEmailPrompt, ToastAndroid.SHORT);
+        ToastAndroid.show(strings.ExportData_SetUpEmailPrompt, ToastAndroid.SHORT);
         this.setState({status: "Error opening email client"});
         console.log(error);
       }
     });
   }
 }
+
+const mapStateToProps = (state) => {
+    return {
+      selectedLanguageStrings: state.selectedLanguageStrings
+    }
+}
+
+export default connect(mapStateToProps, actions)(ExportDataScreen);
 
 const styles = {
   container: {

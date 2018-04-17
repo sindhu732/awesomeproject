@@ -67,7 +67,7 @@ class NewFollowScreen extends Component {
   };
 
   getCommunityPickerItems = () => {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     const communities = this.getCommunities();
     const communityPromptPickerItem = (
         <Picker.Item key="community-prompt" label={strings.NewFollow_Community} value={null} />
@@ -79,7 +79,7 @@ class NewFollowScreen extends Component {
   };
 
   getBeginTimePickerItems = () => {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     const beginTimePromptPickerItem = (
         <Picker.Item key="begin-time-prompt" label={strings.NewFollow_BeginTime + " " + strings.TimeFormat} value={null} />
     );
@@ -90,7 +90,7 @@ class NewFollowScreen extends Component {
   }
 
   getChimpPickerItems = (community) => {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     if (community === null) {
       return [];
     }
@@ -116,7 +116,7 @@ class NewFollowScreen extends Component {
   }
 
   render() {
-    const strings = this.props.screenProps.localizedStrings;
+    const strings = this.props.selectedLanguageStrings;
     const communityPickerItems = this.getCommunityPickerItems();
     const beginTimePickerItems = this.getBeginTimePickerItems();
 
@@ -259,7 +259,7 @@ class NewFollowScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
+    selectedLanguageStrings: state.selectedLanguageStrings,
   }
 }
 

@@ -63,19 +63,29 @@ export const setGPSStatus = (status) => {
 };
 
 export const changeLanguage = (language) => {
-  return {
-    type: 'CHANGE_LANGUAGE',
-    payload: language
+  if (language == "en") {
+    return {
+      type: 'CHANGE_LANGUAGE_ENGLISH',
+      payload: language
+    }
+  } else if (language == "sw") {
+    return {
+      type: 'CHANGE_LANGUAGE_SWAHILI',
+      payload: language
+    }
   }
+
 };
 
-export const loadLocalizedStrings = (strings) => {
+export const loadLocalizedStrings = (enStrings, swStrings) => {
 
-  let localizedStrings = new LocalizedStrings({'en': strings, 'sw': strings});
+  let localizedStrings = new LocalizedStrings({'en': enStrings, 'sw': enStrings});
 
   return {
     type: 'LOAD_LOCALIZED_STRINGS',
-    payload: localizedStrings
+    localizedStrings: localizedStrings,
+    enStrings: enStrings,
+    swStrings: swStrings
   }
 };
 

@@ -1,4 +1,7 @@
 //import state from './state';
+import LocalizedStrings from 'react-native-localization';
+import defaultStrings from '../data/strings';
+
 const initialState = {
   count: 0,
   gpsTrackerOn: false,
@@ -8,9 +11,10 @@ const initialState = {
   gpsTimerId: null,
   gpsTrialNumber: 0,
   selectedLanguage: "en",
-  localizedStrings: null,
-  enStrings: null,
-  swStrings: null
+  localizedStrings: new LocalizedStrings(defaultStrings),
+  enStrings: defaultStrings.en,
+  swStrings: defaultStrings.sw,
+  selectedLanguageStrings: defaultStrings.en
 };
 
 // REDUCERS
@@ -66,15 +70,24 @@ export default (state = initialState, action) => {
         ...state,
         gpsTrialNumber: 0
       }
-    case 'CHANGE_LANGUAGE':
+    case 'CHANGE_LANGUAGE_ENGLISH':
       return {
         ...state,
-        selectedLanguage: action.payload
+        selectedLanguage: action.payload,
+        selectedLanguageStrings: state.enStrings
+      }
+    case 'CHANGE_LANGUAGE_SWAHILI':
+      return {
+        ...state,
+        selectedLanguage: action.payload,
+        selectedLanguageStrings: state.swStrings
       }
     case 'LOAD_LOCALIZED_STRINGS':
       return {
         ...state,
-        localizedStrings: action.payload
+        localizedStrings: action.localizedStrings,
+        enStrings: action.enStrings,
+        swStrings: action.swStrings
       }
     case 'LOAD_ENGLISH_STRINGS':
       return {

@@ -25,6 +25,7 @@ class FollowListScreen extends Component {
 
   render() {
 
+    const strings = this.props.selectedLanguageStrings;
     const follows = realm.objects('Follow');
       //.filtered('endTime = $0', undefined);
 
@@ -32,7 +33,7 @@ class FollowListScreen extends Component {
       return (
         <FollowListRow
           key={i}
-          strings={this.props.screenProps.localizedStrings}
+          strings={strings}
           onPress={() => {
             this.props.navigation.navigate('SummaryScreen', {
               follow: f
@@ -86,7 +87,8 @@ class FollowListRow extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedLanguage: state.selectedLanguage
+    selectedLanguage: state.selectedLanguage,
+    selectedLanguageStrings: state.selectedLanguageStrings
   }
 }
 

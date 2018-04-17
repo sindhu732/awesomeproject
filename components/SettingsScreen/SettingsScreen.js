@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
   BackAndroid,
+  Button,
   ScrollView,
   Text,
   TextInput,
@@ -28,15 +29,13 @@ class LocalizedTextSettingRow extends Component {
             <TextInput
                 autoCorrect={false}
                 style={styles.localizedTextSettingRowItem}
-                onEndEditing={(event) => {this._onEndEditingHandler('en', event.nativeEvent.text)}}
-            >
+                onEndEditing={(event) => {this._onEndEditingHandler('en', event.nativeEvent.text)}}>
               {this.props.enString}
             </TextInput>
             <TextInput
                 autoCorrect={false}
                 style={styles.localizedTextSettingRowItem}
-                onEndEditing={(event) => {this._onEndEditingHandler('sw', event.nativeEvent.text)}}
-            >
+                onEndEditing={(event) => {this._onEndEditingHandler('sw', event.nativeEvent.text)}}>
               {this.props.swString}
             </TextInput>
           </View>
@@ -47,21 +46,28 @@ class LocalizedTextSettingRow extends Component {
 
 class SettingsScreen extends Component {
 
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: "Language Settings",
+      headerRight: <Button title="Done" onPress={ () => navigation.navigate('MenuScreen')} />
+    };
+  };
+
   constructor(props) {
     super(props);
-    // this.state = {
-    //   selectedLanguage: this.props.screenProps.language
-    // }
+    this.state = {
+      selectedLanguage: this.props.screenProps.language
+    }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({
-  //     selectedLanguage: nextProps.language
-  //   });
-  // }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      selectedLanguage: nextProps.language
+    });
+  }
 
-  // componentWillMount() {
-  // }
+  componentWillMount() {
+  }
 
   render() {
 
