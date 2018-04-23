@@ -487,9 +487,9 @@ class FollowScreen extends Component {
                     focalId: this.props.navigation.state.params.follow.focalId,
                     startTime: data.startTime,
                     endTime: data.endTime,
-                    startInterval: this.props.navigation.state.params.intervalNumber,
-                    endInterval: this.props.navigation.state.params.intervalNumber,
-                    intervalNumber: [this.props.navigation.state.params.intervalNumber, this.props.navigation.state.params.intervalNumber]
+                    startInterval: 0, //this.props.navigation.state.params.intervalNumber,
+                    endInterval: 1, // this.props.navigation.state.params.intervalNumber,
+                    intervalNumber: [0, 1] //[this.props.navigation.state.params.intervalNumber, this.props.navigation.state.params.intervalNumber]
                   };
                   objectDict[mainFieldName] = data.mainSelection;
                   objectDict[secondaryFieldName] = data.secondarySelection;
@@ -518,7 +518,7 @@ class FollowScreen extends Component {
                   let object = newActiveList.filter((o) => o.id === data.itemId)[0];
                   object.startTime = data.startTime;
                   object.endTime = data.endTime;
-                  object.startInterval = data.startInterval? data.startInterval: null;
+                  object.startInterval = data.startInterval? data.startInterval: 0;
                   object.endInterval = this.props.navigation.state.params.intervalNumber;
                   object.intervalNumber = [object.startInterval, this.props.navigation.state.params.intervalNumber];
                   object[mainFieldName] = data.mainSelection;
@@ -679,7 +679,7 @@ class FollowScreen extends Component {
               const chimpId = this.state.selectedChimp;
               if (chimpId !== null) {
                 let arrival = this.state.followArrivals[chimpId];
-                // TODO: is this where the arrival status is recorded? Does it work when you go to previous intervals and change data?
+
                 realm.write(() => {
                   //id = this.state.followArrivals[chimpId].id;
                   arrival[field] = value;
