@@ -389,6 +389,7 @@ class FollowScreen extends Component {
       this.props.navigation.navigate('FollowScreen', {
         follow: this.props.navigation.state.params.follow,
         followTime: followTime,
+        followArrivals: followArrivals,
         trackGps: true,
         intervalNumber: 0
       });
@@ -579,7 +580,10 @@ class FollowScreen extends Component {
             activeSpecies={this.state.activeSpecies.map((s, i) => ({id: s.id, name: s.speciesName}))}
             finishedSpecies={this.state.finishedSpecies.map((s, i) => ({id: s.id, name: s.speciesName}))}
             onPreviousPress={()=> {
-              this.navigateToFollowTime(previousFollowTime, null);
+              const followArrivals =
+                  Object.keys(this.state.followArrivals).map(key => this.state.followArrivals[key]);
+
+              this.navigateToFollowTime(previousFollowTime, _.extend(this.state.followArrivals)); // TODO
             }}
             onNextPress={()=>{
               const followArrivals =
@@ -587,14 +591,14 @@ class FollowScreen extends Component {
               const hasNearest = followArrivals.some((fa, i) => fa.isNearestNeighbor);
               const hasWithin5m = followArrivals.some((fa, i) => fa.isWithin5m);
               const hasOpenFood = this.state.activeFood.length !== 0;
-              const hasOpenSpeices = this.state.activeSpecies.length !== 0;
+              const hasOpenSpecies = this.state.activeSpecies.length !== 0;
 
-              if (!hasNearest || !hasWithin5m || hasOpenFood || hasOpenSpeices) {
+              if (!hasNearest || !hasWithin5m || hasOpenFood || hasOpenSpecies) {
                 let alertMessages = [];
                 if (!hasNearest) { alertMessages.push(strings.Follow_NextDataValidationAlertMessageNoNearest); }
                 if (!hasWithin5m) { alertMessages.push(strings.Follow_NextDataValidationAlertMessageNoWithIn5m); }
                 if (hasOpenFood) { alertMessages.push(strings.Follow_NextDataValidationAlertMessageOpenFood); }
-                if (hasOpenSpeices) { alertMessages.push(strings.Follow_NextDataValidationAlertMessageOpenSpecies); }
+                if (hasOpenSpecies) { alertMessages.push(strings.Follow_NextDataValidationAlertMessageOpenSpecies); }
                 alertMessages.push(strings.Follow_NextDataValidationAlertMessagePrompt);
                 const alertMessage = alertMessages.join('\n');
 
@@ -678,20 +682,30 @@ class FollowScreen extends Component {
             updateArrival={(field, value) => {
               const chimpId = this.state.selectedChimp;
               if (chimpId !== null) {
-                let arrival = this.state.followArrivals[chimpId];
+                if(value != "arriveEmpty") {
+                  let arrival = this.state.followArrivals[chimpId];
 
-                realm.write(() => {
-                  //id = this.state.followArrivals[chimpId].id;
-                  arrival[field] = value;
+                  realm.write(() => {
+                    //id = this.state.followArrivals[chimpId].id;
+                    arrival[field] = value;
+
+                    // update State
+                    let newFollowArrivals = this.state.followArrivals;
+                    newFollowArrivals[chimpId] = arrival;
+                    this.setState({followArrivals: newFollowArrivals});
+                  });
+                } else {
+                  // TODO: delete the follow
+                  let arrival = this.state.followArrivals[chimpId];
+                  realm.write(() => {
+                    realm.delete(arrival);
+                  });
 
                   // update State
                   let newFollowArrivals = this.state.followArrivals;
-                  newFollowArrivals[chimpId] = arrival;
+                  delete newFollowArrivals[chimpId];
                   this.setState({followArrivals: newFollowArrivals});
-
-                });
-
-                // TODO: update subsequent values
+                }
               }
             }}
         />
