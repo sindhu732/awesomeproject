@@ -373,6 +373,8 @@ class FollowScreen extends Component {
     if (followArrivals !== null) {
       let updatedFollowArrivals = {};
       const keys = Object.keys(followArrivals);
+
+      // arriveFirst
       for (let i = 0; i < keys.length; ++i) {
         const k = keys[i];
         const fa = followArrivals[k];
@@ -386,16 +388,16 @@ class FollowScreen extends Component {
           updatedFollowArrivals[k] = newFa;
         }
 
-      // TODO: change state -- don't create duplicate components
-      console.log("Interval number, ", this.props.navigation.state.params.intervalNumber + step);
-      this.props.navigation.navigate('FollowScreen', {
-        follow: this.props.navigation.state.params.follow,
-        followTime: followTime,
-        followArrivals: updatedFollowArrivals,
-        trackGps: false,
-        intervalNumber: this.props.navigation.state.params.intervalNumber + step
-      });
-    }
+        // TODO: change state -- don't create duplicate components
+        console.log("Interval number, ", this.props.navigation.state.params.intervalNumber + step);
+        this.props.navigation.navigate('FollowScreen', {
+          follow: this.props.navigation.state.params.follow,
+          followTime: followTime,
+          followArrivals: updatedFollowArrivals,
+          trackGps: false,
+          intervalNumber: this.props.navigation.state.params.intervalNumber + step
+        });
+      }
 
     } else {
       console.log("Interval number restarted, ", 0);
@@ -686,7 +688,7 @@ class FollowScreen extends Component {
             updateArrival={(field, value) => {
               const chimpId = this.state.selectedChimp;
               if (chimpId !== null) {
-                if(value != "arriveEmpty") {
+                if(value != "deleted") {
                   let arrival = this.state.followArrivals[chimpId];
 
                   realm.write(() => {

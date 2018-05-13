@@ -5,7 +5,7 @@ import defaultStrings from '../data/strings';
 const initialState = {
   count: 0,
   gpsTrackerOn: false,
-  gpsTimerInterval: 5*60*1000,
+  gpsTimerInterval: 15*60*1000,
   gpsStatus: '',
   lastGpsPosition: null, // position.timestamp, position.coords.latitude, longitude, altitude, accuracy
   gpsTimerId: null,

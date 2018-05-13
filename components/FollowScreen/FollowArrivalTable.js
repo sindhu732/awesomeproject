@@ -15,7 +15,7 @@ import Util from '../util';
 import sharedStyles from '../SharedStyles';
 
 const infoButtonImages = {
-  'arriveEmpty': require('../../img/time-empty.png'),
+  'deleted': require('../../img/time-empty.png'),
   'arriveFirst': require('../../img/time-arrive-first.png'),
   'arriveSecond': require('../../img/time-arrive-second.png'),
   'arriveThird': require('../../img/time-arrive-third.png'),
@@ -67,7 +67,7 @@ export default class FollowArrivalTable extends Component {
     };
 
     this.panels = {};
-    const arrivalButtons = ['arriveEmpty', 'arriveFirst', 'arriveSecond', 'arriveThird', 'arriveContinues']
+    const arrivalButtons = ['deleted', 'arriveFirst', 'arriveSecond', 'arriveThird', 'arriveContinues']
         .map((t, i) => this.createInfoPanelButton(t, i, false));
     const departureButtons = ['departFirst', 'departSecond', 'departThird']
         .map((t, i) => this.createInfoPanelButton(t, i, true));

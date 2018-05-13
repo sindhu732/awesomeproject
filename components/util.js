@@ -11,7 +11,7 @@ Number.prototype.pad = function(size) {
 
 export default class Util {
   static timeLabels = {
-    absent: '0',
+    deleted: '0',
     continuing: '1',
     arriveFirst: '5',
     arriveSecond: '10',
