@@ -103,6 +103,13 @@ export const loadSwahiliStrings = (strings) => {
   }
 };
 
+export const reloadFollowArrivalsObject = (bool) => {
+  return {
+    type: 'RELOAD_FOLLOW_ARRIVALS_OBJECT',
+    payload: bool
+  }
+};
+
 export const reduxState = () => {
   return (dispatch, getState) => {
     const { counter } = getState();

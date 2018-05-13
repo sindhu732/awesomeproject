@@ -104,7 +104,9 @@ export default class ItemTrackerModal extends Component {
             <View style={styles.timeSelectionGroup}>
               <Picker
                   selectedValue={this.state.startTime}
-                  onValueChange={(v)=>{this.setState({startTime: v})}}
+                  onValueChange={(v)=>{
+                    this.setState({startTime: v})}
+                  }
                   style={styles.timeSelectionPicker}
               >
                 {timePickerItems}
@@ -112,7 +114,9 @@ export default class ItemTrackerModal extends Component {
               <Text style={styles.timeSelectionToText}>{strings.ItemTracker_TimeTo}</Text>
               <Picker
                   selectedValue={this.state.endTime}
-                  onValueChange={(v)=>{this.setState({endTime: v})}}
+                  onValueChange={(v)=>{
+                    this.setState({endTime: v})}
+                  }
                   style={styles.timeSelectionPicker}
               >
                 {timePickerItems}
@@ -121,13 +125,17 @@ export default class ItemTrackerModal extends Component {
 
             <Picker
                 selectedValue={this.state.mainSelection}
-                onValueChange={(v)=>{this.setState({mainSelection: v})}}>
+                onValueChange={(v)=>{
+                  this.setState({mainSelection: v})}
+                }>
               {mainPickerItems}
             </Picker>
 
             <Picker
                 selectedValue={this.state.secondarySelection}
-                onValueChange={(v)=>{this.setState({secondarySelection: v})}}>
+                onValueChange={(v)=>{
+                  this.setState({secondarySelection: v})}
+                }>
               {secondaryPickerItems}
             </Picker>
           </View>

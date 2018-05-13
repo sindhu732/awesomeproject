@@ -10,11 +10,13 @@ const initialState = {
   lastGpsPosition: null, // position.timestamp, position.coords.latitude, longitude, altitude, accuracy
   gpsTimerId: null,
   gpsTrialNumber: 0,
+  gpsCurrentFollowTime: "",
   selectedLanguage: "en",
   localizedStrings: new LocalizedStrings(defaultStrings),
   enStrings: defaultStrings.en,
   swStrings: defaultStrings.sw,
-  selectedLanguageStrings: defaultStrings.en
+  selectedLanguageStrings: defaultStrings.en,
+  reloadFollowArrivalsObject: false
 };
 
 // REDUCERS
@@ -98,6 +100,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         swStrings: action.payload
+      }
+    case 'RELOAD_FOLLOW_ARRIVALS_OBJECT':
+      return {
+        ...state,
+        reloadFollowArrivalsObject: action.payload
       }
 
     default:
