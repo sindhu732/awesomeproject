@@ -26,8 +26,8 @@ export default class ItemTrackerModal extends Component {
     this.setState({
       startTime: nextProps.initialStartTime,
       endTime: nextProps.initialEndTime,
-      startInterval: nextProps.startInterval,
-      endInterval: nextProps.endInterval,
+      startInterval: nextProps.initialStartInterval,
+      endInterval: nextProps.initialEndInterval,
       mainSelection: nextProps.initialMainSelection,
       secondarySelection: nextProps.initialSecondarySelection,
       isEditing: nextProps.initialStartTime !== null,
@@ -84,7 +84,7 @@ export default class ItemTrackerModal extends Component {
                       startTime: this.state.startTime,
                       endTime: this.state.endTime !== null ? this.state.endTime : 'ongoing',
                       startInterval: this.state.startInterval,
-                      endInterval: this.state.endInterval !== null ? this.state.endInterval : 'ongoing',
+                      endInterval: this.state.endInterval !== null ? this.state.endInterval : 0,
                     };
                     this.props.onSave(data, this.state.isEditing);
                     this.props.onDismiss();
@@ -105,7 +105,9 @@ export default class ItemTrackerModal extends Component {
               <Picker
                   selectedValue={this.state.startTime}
                   onValueChange={(v)=>{
-                    this.setState({startTime: v})}
+                    this.setState({
+                      startTime: v
+                    })}
                   }
                   style={styles.timeSelectionPicker}
               >

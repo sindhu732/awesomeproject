@@ -16,7 +16,8 @@ const initialState = {
   enStrings: defaultStrings.en,
   swStrings: defaultStrings.sw,
   selectedLanguageStrings: defaultStrings.en,
-  reloadFollowArrivalsObject: false
+  reloadFollowArrivalsObject: false,
+  deletedFollowArrivals: []
 };
 
 // REDUCERS

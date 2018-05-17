@@ -21,6 +21,7 @@ import SummaryScreenHeader from './SummaryScreenHeader';
 import SummaryScreenTable from './SummaryScreenTable';
 import assert from 'assert';
 import Util from '../util';
+import times from '../../data/time-list.json';
 
 export default class SummaryScreen extends Component {
 
@@ -94,6 +95,9 @@ export default class SummaryScreen extends Component {
 
     let updatedFollowArrivals = {} // TODO:
 
+    const intervalNumberStart = times.indexOf(this.props.navigation.state.params.follow.startTime);
+
+
     return(
         <View style={styles.container}>
           <SummaryScreenHeader
@@ -117,7 +121,8 @@ export default class SummaryScreen extends Component {
                 follow: this.props.navigation.state.params.follow,
                 followTime: t,
                 followArrivals: updatedFollowArrivals,
-                trackGps: false
+                trackGps: false,
+                intervalNumber: times.indexOf(t) - intervalNumberStart
               });
             }}
             followArrivalSummary={followArrivalSummary}

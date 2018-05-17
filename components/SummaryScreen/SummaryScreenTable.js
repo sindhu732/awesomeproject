@@ -18,6 +18,7 @@ import realm from '../../models/realm';
 import sharedStyles from '../SharedStyles';
 import strings from '../../data/strings';
 import Util from '../util';
+import times from '../../data/time-list.json';
 
 class SummaryScreenTableCell extends Component {
 
@@ -95,9 +96,11 @@ export default class SummaryScreenTable extends Component {
     );
   }
 
-  createItemCol(title, rows) {
-    const cells = ([...Array(rows||0)])
-        .map((v, i) => (<SummaryScreenTableCell key={i} certaintyText={rows[i]} />));
+  createItemCol(title, rows, intervals) {
+    const cells = ([...Array(intervals)])
+        .map((v, i) => (
+          <SummaryScreenTableCell key={i} certaintyText={rows[i]} />
+        ));
     return (
         <View style={styles.itemCol}>
           <View style={styles.chimpColTitle}>
@@ -123,27 +126,38 @@ export default class SummaryScreenTable extends Component {
     );
   }
 
-  // TODO: more complex lists for continued food / species
   createTimedList(category, items, intervals) {
     let itemList = [];
 
+    for (var i = 0; i < intervals; i++) {
+      itemList[i] = []
+    }
+
     if (category == "Food") {
       for (var k in items) {
-        itemList.push(items[k].foodName + " " + items[k].foodPart);
+        let n = k.endInterval - k.startInterval + 1;
+        let food = items[k].foodName + " " + items[k].foodPart;
+        for (var i = items[k].startInterval; i <= items[k].endInterval; i++) {
+          itemList[i].push(food);
+        }
       }
     }
 
     if (category == "Species") {
       for (var k in items) {
-        itemList.push(items[k].speciesName + " " + items[k].speciesCount);
+        let n = k.endInterval - k.startInterval + 1;
+        let species = items[k].speciesName + " " + items[k].speciesCount;
+        for (var i = items[k].startInterval; i <= items[k].endInterval; i++) {
+          itemList[i].push(species);
+        }
       }
     }
 
-    let buffer = intervals - itemList.length;
-    for (i = 0; i < buffer; i++) {
-      itemList.push("");
+    let rowText = []
+    for (var k in itemList) {
+        rowText.push(itemList[k].join(", "));
     }
-    return itemList;
+    return rowText;
   }
 
   render() {
@@ -168,8 +182,8 @@ export default class SummaryScreenTable extends Component {
 
     const foodList = this.createTimedList("Food", this.props.food, intervals);
     const speciesList = this.createTimedList("Species", this.props.species, intervals);
-    const foodCol = this.createItemCol("Food", foodList);
-    const speciesCol = this.createItemCol("Species", speciesList);
+    const foodCol = this.createItemCol("Food", foodList, intervals);
+    const speciesCol = this.createItemCol("Species", speciesList, intervals);
 
     return(
         <View style={styles.container}>

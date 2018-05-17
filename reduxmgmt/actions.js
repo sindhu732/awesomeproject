@@ -110,6 +110,13 @@ export const reloadFollowArrivalsObject = (bool) => {
   }
 };
 
+// export const deletedFollowArrivals = (chimp) => {
+//   return {
+//     type: 'DELETED_FOLLOW_ARRIVALS',
+//     payload: chimp
+//   }
+// };
+
 export const reduxState = () => {
   return (dispatch, getState) => {
     const { counter } = getState();

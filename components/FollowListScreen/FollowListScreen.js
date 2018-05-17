@@ -61,7 +61,7 @@ class FollowListRow extends Component {
     const focalChimpId = follow.focalId;
     const researcherName = follow.amObserver1;
     const date = this.props.follow.date;
-    const timeStart = this.props.follow.timeStart;
+    const timeStart = this.props.follow.startTime;
 
     const dateString = Util.getDateString(date);
 
