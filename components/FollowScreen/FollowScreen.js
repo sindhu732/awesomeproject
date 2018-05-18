@@ -228,22 +228,10 @@ class FollowScreen extends Component {
   };
 
   deleteChimp(chimp) {
-    // let allFollowArrival = realm.objects('FollowArrival')
-    //     .filtered('focalId = $0 AND date = $1 AND followStartTime = $2', this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date, this.props.navigation.state.params.followTime);
-    // for (let i = 0; i < allFollowArrival.length; i++) {
-    //   const arrival = allFollowArrival[i];
-    // }
-    //
-    // const followArrivals = realm.objects('FollowArrival')
-    //   .filtered('focalId = $0 AND date = $1 AND followStartTime = $2 AND chimpId = $3',
-    //     this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date, this.props.navigation.state.params.follow.startTime, chimp);
-    // for (let i = 0; i < followArrivals.length; i++) {
-    //   const arrival = followArrivals[i];
-    // }
 
     let followArrivals = realm.objects('FollowArrival')
-      .filtered('focalId = $0 AND date = $1 AND followStartTime = $2',
-        this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date, this.props.navigation.state.params.follow.startTime);
+      .filtered('focalId = $0 AND date = $1 AND chimpId = $2',
+        this.props.navigation.state.params.follow.focalId, this.props.navigation.state.params.follow.date, chimp);
 
     for (let i = 0; i < followArrivals.length; i++) {
       let arrival = followArrivals[i];
@@ -251,13 +239,12 @@ class FollowScreen extends Component {
         realm.write(() => {
           realm.delete(arrival);
         });
-
-        // update State
-        let newFollowArrivals = this.state.followArrivals;
-        delete newFollowArrivals[chimp];
-        this.setState({followArrivals: newFollowArrivals});
       }
     }
+    // update State
+    let newFollowArrivals = this.state.followArrivals;
+    delete newFollowArrivals[chimp];
+    this.setState({followArrivals: newFollowArrivals});
   }
 
   restartTimer() {
@@ -643,6 +630,7 @@ class FollowScreen extends Component {
             onNextPress={()=>{
               const followArrivals =
                   Object.keys(this.state.followArrivals).map(key => this.state.followArrivals[key]);
+
               const hasNearest = followArrivals.some((fa, i) => fa.isNearestNeighbor);
               const hasWithin5m = followArrivals.some((fa, i) => fa.isWithin5m);
               const hasOpenFood = this.state.activeFood.length !== 0;
