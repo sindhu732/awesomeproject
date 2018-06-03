@@ -135,7 +135,6 @@ export default class SummaryScreenTable extends Component {
 
     if (category == "Food") {
       for (var k in items) {
-        let n = k.endInterval - k.startInterval + 1;
         let food = items[k].foodName + " " + items[k].foodPart;
         for (var i = items[k].startInterval; i <= items[k].endInterval; i++) {
           itemList[i].push(food);
@@ -145,7 +144,6 @@ export default class SummaryScreenTable extends Component {
 
     if (category == "Species") {
       for (var k in items) {
-        let n = k.endInterval - k.startInterval + 1;
         let species = items[k].speciesName + " " + items[k].speciesCount;
         for (var i = items[k].startInterval; i <= items[k].endInterval; i++) {
           itemList[i].push(species);

@@ -75,7 +75,7 @@ class MenuScreen extends Component {
             <Text style={styles.menuBtnText}> {strings.Menu_ExportData} </Text>
         </TouchableOpacity>
 
-        <Text>Version: 0.3.6</Text>
+        <Text>Version: 0.6</Text>
 
       </ImageBackground>
     );

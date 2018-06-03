@@ -4,6 +4,8 @@ import defaultStrings from '../data/strings';
 
 const initialState = {
   count: 0,
+  intervalId: null,
+  watchId: null,
   gpsTrackerOn: false,
   gpsTimerInterval: 15*60*1000,
   gpsStatus: '',
@@ -38,6 +40,16 @@ export default (state = initialState, action) => {
         ...state,
         count: 0
       };
+    case 'SET_INTERVAL_ID':
+      return {
+        ...state,
+        intervalId: action.payload
+      };
+    case 'SET_WATCH_ID':
+      return {
+        ...state,
+        watchId: action.payload
+      };
     case 'TRACK_GPS':
       return {
         ...state,
@@ -62,6 +74,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gpsStatus: action.payload
+      }
+    case 'SET_GPS_TIMER_ID':
+      return {
+        ...state,
+        gpsTimerId: action.payload
       }
     case 'INCREMENT_GPS_TRIAL_NUMBER':
       return {

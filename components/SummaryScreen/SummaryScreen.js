@@ -69,7 +69,10 @@ export default class SummaryScreen extends Component {
         startTime: Util.getTimeOutput(fo.startTime),
         endTime: Util.getTimeOutput(fo.endTime),
         speciesName: fo.speciesName,
-        speciesCount: fo.speciesCount
+        speciesCount: fo.speciesCount,
+        startInterval: fo.startInterval,
+        endInterval: fo.endInterval,
+        intervalNumber: fo.intervalNumber
     }));
     console.log(species);
 

@@ -19,6 +19,20 @@ export const reset = () => {
   }
 };
 
+export const setIntervalId = (id) => {
+  return {
+    type: 'SET_INTERVAL_ID',
+    payload: id
+  }
+};
+
+export const setWatchId = (id) => {
+  return {
+    type: 'SET_WATCH_ID',
+    payload: id
+  }
+};
+
 export const trackGps = () => {
   return {
     type: 'TRACK_GPS'
@@ -59,6 +73,13 @@ export const setGPSStatus = (status) => {
   return {
     type: 'SET_GPS_STATUS',
     payload: status
+  }
+};
+
+export const setGpsTimerId = (id) => {
+  return {
+    type: 'SET_GPS_TIMER_ID',
+    payload: id
   }
 };
 
